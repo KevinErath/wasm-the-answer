@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script>
+      async function fetchLocal(url) {
+        return new Promise(function(resolve, _) {
+          var request = new XMLHttpRequest();
+          request.onload = function() {
+            resolve(new Response(request.responseText));
+          };
+          request.open('GET', url);
+          request.send(null);
+        });
+      }
+       
+      fetchLocal('./answer.wasm').then(x=>x.arrayBuffer()).then(bytes=> WebAssembly.instantiate(bytes, {})
+      ).then(results => {
+        var instance = results.instance;
+        var result = instance.exports.get_answer();
+        document.write(result);
+      }).catch(console.error);
+    </script>
+  </head>
+
+  <body>
+  </body>
+</html>
